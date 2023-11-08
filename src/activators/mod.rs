@@ -10,7 +10,7 @@ pub enum Type {
     Sigmoid,
     Tanh,
     Relu,
-    Elu,
+    Swish,
     Custom
 }
 
@@ -38,9 +38,9 @@ pub fn der_relu(x: f64) -> f64{
     }
 }
 
-pub fn elu(x: f64) -> f64{
-    if x >= 0.0 { x } else { E.powf(x) - 1.0 }
+pub fn swish(x: f64) -> f64{
+    x * sigm(x)
 }
-pub fn der_elu(x: f64) -> f64{
-    if x >= 0.0 { 1.0 } else { elu(x) + 1.0 }
+pub fn der_swish(x: f64) -> f64{
+    sigm(x) * (1.0 - swish(x))
 }

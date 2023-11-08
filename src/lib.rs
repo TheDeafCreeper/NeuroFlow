@@ -541,10 +541,10 @@ impl FeedForward {
                 self.act.func = activators::relu;
                 self.act.der = activators::der_relu;
             }
-            activators::Type::Elu => {
-                self.final_act_type = activators::Type::Elu;
-                self.final_act.func = activators::elu;
-                self.final_act.der = activators::der_elu;
+            activators::Type::Swish => {
+                self.final_act_type = activators::Type::Swish;
+                self.final_act.func = activators::swish;
+                self.final_act.der = activators::der_swish;
             }
         }
         self
@@ -574,10 +574,10 @@ impl FeedForward {
                 self.final_act.func = activators::relu;
                 self.final_act.der = activators::der_relu;
             }
-            activators::Type::Elu => {
-                self.final_act_type = activators::Type::Elu;
-                self.final_act.func = activators::elu;
-                self.final_act.der = activators::der_elu;
+            activators::Type::Swish => {
+                self.final_act_type = activators::Type::Swish;
+                self.final_act.func = activators::swish;
+                self.final_act.der = activators::der_swish;
             }
         }
         self
@@ -680,10 +680,10 @@ impl Transform for FeedForward{
                 self.act.func = activators::relu;
                 self.act.der = activators::der_relu;
             }
-            activators::Type::Elu => {
-                self.final_act_type = activators::Type::Elu;
-                self.final_act.func = activators::elu;
-                self.final_act.der = activators::der_elu;
+            activators::Type::Swish => {
+                self.final_act_type = activators::Type::Swish;
+                self.final_act.func = activators::swish;
+                self.final_act.der = activators::der_swish;
             }
         }
     }
