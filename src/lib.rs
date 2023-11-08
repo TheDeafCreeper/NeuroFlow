@@ -541,6 +541,11 @@ impl FeedForward {
                 self.act.func = activators::relu;
                 self.act.der = activators::der_relu;
             }
+            activators::Type::Elu => {
+                self.final_act_type = activators::Type::Elu;
+                self.final_act.func = activators::elu;
+                self.final_act.der = activators::der_elu;
+            }
         }
         self
     }
@@ -568,6 +573,11 @@ impl FeedForward {
                 self.final_act_type = activators::Type::Relu;
                 self.final_act.func = activators::relu;
                 self.final_act.der = activators::der_relu;
+            }
+            activators::Type::Elu => {
+                self.final_act_type = activators::Type::Elu;
+                self.final_act.func = activators::elu;
+                self.final_act.der = activators::der_elu;
             }
         }
         self
@@ -669,6 +679,11 @@ impl Transform for FeedForward{
                 self.act_type = activators::Type::Relu;
                 self.act.func = activators::relu;
                 self.act.der = activators::der_relu;
+            }
+            activators::Type::Elu => {
+                self.final_act_type = activators::Type::Elu;
+                self.final_act.func = activators::elu;
+                self.final_act.der = activators::der_elu;
             }
         }
     }

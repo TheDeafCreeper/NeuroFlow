@@ -1,7 +1,7 @@
 //! Module contains popular neural networks activation functions
 //! and theirs derivatives
 
-use std::f64;
+use std::f64::{self, consts::E};
 
 /// Determine types of activation functions contained in this module.
 #[allow(dead_code)]
@@ -10,9 +10,9 @@ pub enum Type {
     Sigmoid,
     Tanh,
     Relu,
+    Elu,
     Custom
 }
-
 
 pub fn sigm(x: f64) -> f64{ 1.0/(1.0 + x.exp()) }
 pub fn der_sigm(x: f64) -> f64{
@@ -36,4 +36,11 @@ pub fn der_relu(x: f64) -> f64{
     } else {
         1.0
     }
+}
+
+pub fn elu(x: f64) -> f64{
+    if x >= 0.0 { x } else { E.powf(x) - 1.0 }
+}
+pub fn der_elu(x: f64) -> f64{
+    if x >= 0.0 { 1.0 } else { elu(x) + 1.0 }
 }
