@@ -255,7 +255,12 @@ pub struct FeedForward {
     act_type: activators::Type,
 
     #[serde(skip_deserializing, skip_serializing)]
-    act: ActivationContainer
+    act: ActivationContainer,
+
+    final_act_type: activators::Type,
+
+    #[serde(skip_deserializing, skip_serializing)]
+    final_act: ActivationContainer
 }
 
 impl Layer {
@@ -321,7 +326,10 @@ impl FeedForward {
         let mut nn = FeedForward {learn_rate: 0.1, momentum: 0.1, error: 0.0,
             layers: Vec::new(),
             act: ActivationContainer{func: activators::tanh, der: activators::der_tanh},
-            act_type: activators::Type::Tanh};
+            act_type: activators::Type::Tanh,
+            final_act: ActivationContainer{func: activators::tanh, der: activators::der_tanh},
+            final_act_type: activators::Type::Tanh
+        };
 
         for i in 1..architecture.len() {
             nn.layers.push(Layer::new(architecture[i], architecture[i - 1]))
@@ -351,7 +359,7 @@ impl FeedForward {
                         sum += self.layers[j].w[i][k + 1] * self.layers[j - 1].y[k];
                     }
                     self.layers[j].v[i] = sum;
-                    self.layers[j].y[i] = sum;
+                    self.layers[j].y[i] = (self.final_act.func)(sum);
                 }
             }
             else {
@@ -375,7 +383,7 @@ impl FeedForward {
             if j == self.layers.len() - 1{
                 self.error = 0.0;
                 for i in 0..self.layers[j].y.len(){
-                    self.layers[j].delta[i] = (d[i] - self.layers[j].y[i])* (self.act.der)(self.layers[j].v[i]);
+                    self.layers[j].delta[i] = (d[i] - self.layers[j].y[i])* (self.final_act.der)(self.layers[j].v[i]);
                     self.error += 0.5 * (d[i] - self.layers[j].y[i]).powi(2);
                 }
             } else {
@@ -532,6 +540,34 @@ impl FeedForward {
                 self.act_type = activators::Type::Relu;
                 self.act.func = activators::relu;
                 self.act.der = activators::der_relu;
+            }
+        }
+        self
+    }
+
+    /// Choose activation function for the final layer. `Note` that if you pass `activators::Type::Custom`
+    /// as argument of this method, the default value (`activators::Type::Tanh`) will
+    /// be used.
+    ///
+    /// * `func: neuroflow::activators::Type` - enum element that indicates which
+    /// function to use;
+    /// * `return -> &mut FeedForward` - link on the current struct.
+    pub fn final_activation(&mut self, func: activators::Type) -> &mut FeedForward{
+        match func{
+            activators::Type::Sigmoid => {
+                self.final_act_type = activators::Type::Sigmoid;
+                self.final_act.func = activators::sigm;
+                self.final_act.der = activators::der_sigm;
+            }
+            activators::Type::Tanh | activators::Type::Custom => {
+                self.final_act_type = activators::Type::Tanh;
+                self.final_act.func = activators::tanh;
+                self.final_act.der = activators::der_tanh;
+            }
+            activators::Type::Relu => {
+                self.final_act_type = activators::Type::Relu;
+                self.final_act.func = activators::relu;
+                self.final_act.der = activators::der_relu;
             }
         }
         self
