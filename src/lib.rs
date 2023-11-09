@@ -411,7 +411,7 @@ impl FeedForward {
                             self.layers[j].w[i][k] += self.learn_rate * self.layers[j].delta[i]*self.layers[j - 1].y[k - 1];
                         }
                     }
-                    self.layers[j].w[i][k] += self.momentum * self.layers[j].prev_delta[i];
+                    self.layers[j].w[i][k] += self.momentum * -self.layers[j].prev_delta[i];
                 }
             }
         }
