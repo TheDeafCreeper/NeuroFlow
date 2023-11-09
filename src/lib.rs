@@ -274,7 +274,7 @@ impl Layer {
 
             v = Vec::new();
             for _ in 0..input + 1{
-                v.push(2f64 * rand::random::<f64>() - 1f64);
+                v.push(0.5);//v.push(2f64 * rand::random::<f64>() - 1f64);
             }
 
             nl.w.push(v);
